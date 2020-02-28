@@ -1,0 +1,93 @@
+<%- include('layouts/html_start.ejs') %>
+
+<%- include('layouts/layout.ejs') %>
+
+<section class="section">
+    <div class="section-header">
+        <h1>Add a Book</h1>
+    </div>
+    <p class="section-lead">
+        Books can be added on this page
+    </p>
+    <div class="section-body">
+        <div class="row">
+            <div class="col-12 col-md-4 col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Enter a Book</h4>
+                    </div>
+                    <form id="enterBook" method="POST" class="needs-validation" novalidate="">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>Title</label>
+                                <input id="title" type="text" name="title" class="form-control" required="">
+                                <div class="invalid-feedback">
+                                    Title is required
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Author</label>
+                                <input id="author" type="text" name="author" class="form-control" required="">
+                                <div class="invalid-feedback">
+                                    Author is required
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Deaprtment</label>
+                                <select id="department" name="department" class="form-control selectric">
+                                    <option value="">Please select a department</option>
+                                    <option value="a">a</option>
+                                    <option value="b">b</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="card-footer text-right">
+                            <button type="submit" id="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<%- include('layouts/scripts.ejs') %>
+
+<script>
+
+$('#enterBook').submit(function (event) {
+        if ($('#enterBook')[0].checkValidity() === false) {
+            console.log('Validation Failed');
+            return;
+        } else {
+
+            event.preventDefault();
+            var title = $('#title').val();
+            var author = $('#author').val();
+            var department = $('#department').val();
+
+
+            $.post('/addBooks', { title, author, department }, function (data) {
+                console.log(data);
+                if (data.status === "success") {
+                    iziToast.success({
+                        title: 'Success!',
+                        message: data.msg,
+                        position: 'topCenter'
+                    });
+
+                } else {
+                    iziToast.error({
+                        title: 'Failed!',
+                        message: data.msg,
+                        position: 'topCenter'
+                    });
+                }
+            });
+        }
+    })
+
+
+</script>
+
+<%- include('./layouts/html_end.ejs') %>
