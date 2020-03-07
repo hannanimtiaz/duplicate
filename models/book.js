@@ -5,8 +5,10 @@ var Schema = mongoose.Schema;
 
 var bookSchema = new Schema({
     title: String,
-    author: String,
+    author: [{type:String}],
     department: String,
+    quantity:Number,
+    current:Number
 },{
   timestamps: true
 });

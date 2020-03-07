@@ -42,3 +42,13 @@ module.exports.isAdmin = function (req, res, next) {
         res.redirect('/');
     }
 }
+module.exports.isNotAdmin = function (req, res, next) {
+    if (!req.session._id) {
+        next();
+    }
+    else {
+        // res.send('You are loggout');
+        console.log(req.session._id);
+        res.render('home');
+    }
+}

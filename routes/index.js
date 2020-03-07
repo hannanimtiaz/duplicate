@@ -6,7 +6,7 @@ var auth = require('../middlewares/auth')
 var admin = require('../controllers/admin')
 
 
-router.get('/', (req, res) => {
+router.get('/', auth.isNotAdmin, (req, res) => {
     res.render('index');
 });
 
@@ -36,6 +36,21 @@ router.get('/viewBooks', auth.isAdmin, admin.getViewBooks)
 
 /*=====  End of Section comment block  ======*/
 
+
+
+/*=============================================
+=            UPDATE BOOKS ROUTES            =
+=============================================*/
+
+router.get('/updateBooks', auth.isAdmin, admin.getUpdateBooks)
+
+
+router.get('/update/:bookID', auth.isAdmin, admin.getUpdatePage)
+
+router.post('/issueBook',admin.issueBook)
+
+router.post('/returnBook',admin.returnBook)
+/*=====  End of UPDATE BOOKS ROUTES  ======*/
 
 
 module.exports = router;
