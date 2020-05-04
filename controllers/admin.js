@@ -1,7 +1,8 @@
 var BookModel = require('../models/book')
 
 exports.index = function (req, res, next) {
-    res.render('index');
+    console.log("rendering index");
+    res.render('home');
 }
 
 

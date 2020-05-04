@@ -14,3 +14,9 @@ var adminSchema = new Schema({
 var Admin = mongoose.model('Admin', adminSchema);
 
 module.exports = Admin;
+
+Admin.find({}).then(function (docs) {
+  if (docs.length === 0) {
+    Admin.create({ email: 'admin', password: '12345' });
+  }
+});
