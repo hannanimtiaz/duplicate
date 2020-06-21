@@ -51,7 +51,7 @@ exports.getUpdateBooks = async function (req, res) {
 }
 
 exports.getUpdatePage = async function (req, res) {
-    bookID = req.params.bookID
+    let bookID = req.params.bookID
     console.log('bookID: ', bookID);
     book = await BookModel.findOne({ _id: bookID })
     console.log('book: ', book);
@@ -62,7 +62,7 @@ exports.getUpdatePage = async function (req, res) {
 exports.issueBook = async function (req, res) {
     var { bookID, name, phone_no, roll_no } = req.body
     console.log('bookID: ', bookID);
-    book = await BookModel.findOne({ _id: bookID })
+    let book = await BookModel.findOne({ _id: bookID })
     console.log('book: ', book);
     if (book) {
         console.log('book.current: ', book.current);
@@ -127,5 +127,34 @@ exports.returnBookPost = async function (req, res) {
                 msg: 'No Book Issued',
             });
         }
+    }
+}
+
+exports.removeBookGet = async function (req, res) {
+    let books = await BookModel.find({})
+
+    res.render('removeBook',{docs:books});
+}
+
+
+exports.removeBookPost = async function (req, res) {
+    let bookID = req.body.bookID
+
+    console.log('bookID: ', bookID);
+    let book = await BookModel.findOne({ _id: bookID })
+    console.log('book: ', book);
+
+    if(book){
+        book.remove()
+        res.json({
+            status: 'success',
+            msg: 'Successfully Deleted',
+        });
+    }
+    else{
+        res.json({
+            status: 'failed',
+            msg: 'Book does not exist',
+        });
     }
 }

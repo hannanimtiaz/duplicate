@@ -1,4 +1,7 @@
 var mongoose = require('mongoose');
+const { schema } = require('./issue');
+
+var BookHooks = require('./hooks/book')
 
 //Define a schema
 var Schema = mongoose.Schema;
@@ -12,6 +15,8 @@ var bookSchema = new Schema({
 },{
   timestamps: true
 });
+
+bookSchema.pre('remove',BookHooks.removeBook)
 
 var Book = mongoose.model('Book', bookSchema);
 

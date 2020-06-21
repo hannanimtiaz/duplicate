@@ -52,6 +52,12 @@ router.post('/issueBook', admin.issueBook)
 router.get('/returnBook', auth.isAdmin, admin.returnBook)
 
 router.post('/returnBook', admin.returnBookPost)
+
+router.get('/removeBooks', auth.isAdmin, admin.removeBookGet)
+
+router.post('/removeBooks', auth.isAdmin, admin.removeBookPost)
+
+
 /*=====  End of UPDATE BOOKS ROUTES  ======*/
 
 
