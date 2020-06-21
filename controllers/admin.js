@@ -158,3 +158,28 @@ exports.removeBookPost = async function (req, res) {
         });
     }
 }
+
+exports.updateBook = async function(req, res){
+    let {bookID, quantity, title, author, department} = req.body
+
+    let book = await BookModel.findById(bookID)
+
+    if(book){
+
+        book.quantity = quantity
+        book.title = title
+        book.author = author
+        book.department = department
+        book.save()
+        res.json({
+            status: 'success',
+            msg: 'Successfully Updated',
+        });
+    }
+    else{
+        res.json({
+            status: 'failed',
+            msg: 'Book does not exist',
+        });
+    }
+}

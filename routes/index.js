@@ -12,6 +12,8 @@ router.get('/', auth.isNotAdmin, (req, res) => {
 
 router.post('/login', auth.login)
 
+router.get('/logout', auth.isAdmin, auth.logout);
+
 router.get('/home', auth.isAdmin, admin.index);
 
 
@@ -47,18 +49,37 @@ router.get('/updateBooks', auth.isAdmin, admin.getUpdateBooks)
 
 router.get('/update/:bookID', auth.isAdmin, admin.getUpdatePage)
 
-router.post('/issueBook', admin.issueBook)
+router.post('/updateBook',auth.isAdmin, admin.updateBook);
+
+
+
+/*=====  End of UPDATE BOOKS ROUTES  ======*/
+
+
+/*=============================================
+=            ISSUE BOOKS ROUTES            =
+=============================================*/
+
+
+router.post('/issueBook',auth.isAdmin, admin.issueBook)
 
 router.get('/returnBook', auth.isAdmin, admin.returnBook)
 
-router.post('/returnBook', admin.returnBookPost)
+router.post('/returnBook',auth.isAdmin, admin.returnBookPost)
+
+/*=====  End of ISSUE BOOKS ROUTES  ======*/
+
+
+/*=============================================
+=            REMOVE BOOKS ROUTES            =
+=============================================*/
 
 router.get('/removeBooks', auth.isAdmin, admin.removeBookGet)
 
 router.post('/removeBooks', auth.isAdmin, admin.removeBookPost)
 
 
-/*=====  End of UPDATE BOOKS ROUTES  ======*/
+/*=====  End of REMOVE BOOKS ROUTES  ======*/
 
 
 module.exports = router;

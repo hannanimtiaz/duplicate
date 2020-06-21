@@ -31,6 +31,11 @@ module.exports.login = async function (req, res, next) {
     }
 }
 
+module.exports.logout = function (req, res, next){
+    req.session.destroy();
+     res.redirect('/');
+}
+
 module.exports.isAdmin = function (req, res, next) {
     if (req.session._id) {
         console.log(req.session._id);
@@ -49,6 +54,7 @@ module.exports.isNotAdmin = function (req, res, next) {
     else {
         // res.send('You are loggout');
         console.log(req.session._id);
-        res.render('home');
+        res.render('index');
     }
 }
+
