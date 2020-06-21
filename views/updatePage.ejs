@@ -28,8 +28,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Deaprtment</label>
-                                <select id="department" name="department"
-                                    class="form-control selectric">
+                                <select id="department" name="department" class="form-control selectric">
                                     <option value="">Please select a department</option>
                                     <option value="a">a</option>
                                     <option value="b">b</option>
@@ -40,7 +39,7 @@
                                 <input id="quantity" type="number" name="quantity" value="<%= book.quantity %>"
                                     class="form-control" required="">
                                 <div class="invalid-feedback">
-                                    Quamtity is required
+                                    Quantity is required
                                 </div>
                             </div>
                             <% book.author.forEach(function(author){%>

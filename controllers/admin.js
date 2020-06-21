@@ -1,4 +1,6 @@
 var BookModel = require('../models/book')
+var IssueModel = require('../models/issue')
+const moment = require('moment-timezone');
 
 exports.index = function (req, res, next) {
     console.log("rendering index");
@@ -58,7 +60,7 @@ exports.getUpdatePage = async function (req, res) {
 }
 
 exports.issueBook = async function (req, res) {
-    var bookID = req.body.bookID
+    var { bookID, name, phone_no, roll_no } = req.body
     console.log('bookID: ', bookID);
     book = await BookModel.findOne({ _id: bookID })
     console.log('book: ', book);
@@ -68,6 +70,16 @@ exports.issueBook = async function (req, res) {
             book.current = book.current - 1;
             let current = book.current
             book.save()
+            today = moment().format('YYYY-MM-DD')
+            returnDate = moment(today).add('days', 7).format('YYYY-MM-DD')
+            IssueModel.create({
+                'name': name,
+                'roll_no': roll_no,
+                'phone_number': phone_no,
+                'book_id': bookID,
+                'issueDate': today,
+                'returnDate': returnDate
+            })
             res.json({
                 status: 'success',
                 msg: 'Successfully Issued',
@@ -85,16 +97,24 @@ exports.issueBook = async function (req, res) {
 
 
 exports.returnBook = async function (req, res) {
-    var bookID = req.body.bookID
-    console.log('bookID: ', bookID);
-    book = await BookModel.findOne({ _id: bookID })
-    console.log('book: ', book);
-    if (book) {
-        console.log('book.current: ', book.current);
-        if (book.current < book.quantity) {
-            book.current = book.current + 1;
-            let current = book.current
-            book.save()
+    var issues = await IssueModel.find({}).populate('book_id')
+
+    res.render('returnBook', { issues });
+}
+
+exports.returnBookPost = async function (req, res) {
+    var issueID = req.body.issueID
+    console.log('issueID: ', issueID);
+
+    let issue = await IssueModel.findOne({ _id: issueID }).populate('book_id')
+    console.log('issue: ', issue);
+    if (issue) {
+        console.log('book.current: ', issue.book_id.current);
+        if (issue.book_id.current < issue.book_id.quantity) {
+            issue.book_id.current = issue.book_id.current + 1;
+            let current = issue.book_id.current
+            issue.book_id.save()
+            issue.remove()
             res.json({
                 status: 'success',
                 msg: 'Successfully Issued',

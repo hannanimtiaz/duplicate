@@ -47,9 +47,11 @@ router.get('/updateBooks', auth.isAdmin, admin.getUpdateBooks)
 
 router.get('/update/:bookID', auth.isAdmin, admin.getUpdatePage)
 
-router.post('/issueBook',admin.issueBook)
+router.post('/issueBook', admin.issueBook)
 
-router.post('/returnBook',admin.returnBook)
+router.get('/returnBook', auth.isAdmin, admin.returnBook)
+
+router.post('/returnBook', admin.returnBookPost)
 /*=====  End of UPDATE BOOKS ROUTES  ======*/
 
 
