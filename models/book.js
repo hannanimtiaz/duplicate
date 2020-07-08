@@ -1,5 +1,4 @@
 var mongoose = require('mongoose');
-const { schema } = require('./issue');
 
 var BookHooks = require('./hooks/book')
 
@@ -9,7 +8,7 @@ var Schema = mongoose.Schema;
 var bookSchema = new Schema({
     title: String,
     author: [{type:String}],
-    department: String,
+    department: {type: Schema.Types.ObjectId, ref: 'Department'},
     quantity:Number,
     current:Number
 },{

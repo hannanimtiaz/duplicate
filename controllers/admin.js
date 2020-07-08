@@ -1,5 +1,6 @@
 var BookModel = require('../models/book')
 var IssueModel = require('../models/issue')
+var DepartmentModel = require('../models/depertment')
 const moment = require('moment-timezone');
 
 exports.index = function (req, res, next) {
@@ -8,8 +9,9 @@ exports.index = function (req, res, next) {
 }
 
 
-exports.getAddBooks = function (req, res) {
-    res.render('addBooks');
+exports.getAddBooks = async function (req, res) {
+    var departments = await DepartmentModel.find({})
+    res.render('addBooks', { departments });
 }
 
 exports.postAddBooks = async function (req, res) {
@@ -37,26 +39,26 @@ exports.postAddBooks = async function (req, res) {
 }
 
 
-
 exports.getViewBooks = async function (req, res) {
-    var docs = await BookModel.find({})
+    var docs = await BookModel.find({}).populate('department')
 
     res.render('viewBooks', { docs });
 }
 
 exports.getUpdateBooks = async function (req, res) {
-    var docs = await BookModel.find({})
+    var docs = await BookModel.find({}).populate('department')
 
     res.render('updateBooks', { docs });
 }
 
 exports.getUpdatePage = async function (req, res) {
     let bookID = req.params.bookID
-    console.log('bookID: ', bookID);
+
     book = await BookModel.findOne({ _id: bookID })
     console.log('book: ', book);
+    let departments = await DepartmentModel.find({})
 
-    res.render('updatePage', { book: book });
+    res.render('updatePage', { book: book, departments });
 }
 
 exports.issueBook = async function (req, res) {
@@ -97,7 +99,14 @@ exports.issueBook = async function (req, res) {
 
 
 exports.returnBook = async function (req, res) {
-    var issues = await IssueModel.find({}).populate('book_id')
+    var issues = await IssueModel.find({}).populate({
+        path: 'book_id',
+        model: 'Book',
+        populate: {
+            path: 'department',
+            model: 'Department'
+        }
+    })
 
     res.render('returnBook', { issues });
 }
@@ -131,9 +140,9 @@ exports.returnBookPost = async function (req, res) {
 }
 
 exports.removeBookGet = async function (req, res) {
-    let books = await BookModel.find({})
+    let books = await BookModel.find({}).populate('department')
 
-    res.render('removeBook',{docs:books});
+    res.render('removeBook', { docs: books });
 }
 
 
@@ -144,14 +153,14 @@ exports.removeBookPost = async function (req, res) {
     let book = await BookModel.findOne({ _id: bookID })
     console.log('book: ', book);
 
-    if(book){
+    if (book) {
         book.remove()
         res.json({
             status: 'success',
             msg: 'Successfully Deleted',
         });
     }
-    else{
+    else {
         res.json({
             status: 'failed',
             msg: 'Book does not exist',
@@ -159,27 +168,91 @@ exports.removeBookPost = async function (req, res) {
     }
 }
 
-exports.updateBook = async function(req, res){
-    let {bookID, quantity, title, author, department} = req.body
+exports.updateBook = async function (req, res) {
+    let { bookID, quantity, title, author, department } = req.body
 
     let book = await BookModel.findById(bookID)
 
-    if(book){
+    if (book) {
 
-        book.quantity = quantity
-        book.title = title
-        book.author = author
-        book.department = department
-        book.save()
-        res.json({
-            status: 'success',
-            msg: 'Successfully Updated',
-        });
+        if (department) {
+
+            book.quantity = quantity
+            book.title = title
+            book.author = author
+            book.department = department
+            book.save()
+            res.json({
+                status: 'success',
+                msg: 'Successfully Updated',
+            });
+        } else {
+            res.json({
+                status: 'failed',
+                msg: 'No Department Selected',
+            });
+        }
     }
-    else{
+    else {
         res.json({
             status: 'failed',
             msg: 'Book does not exist',
         });
     }
+}
+
+exports.addDepartmentGet = async function (req, res) {
+    res.render('createDepartment');
+}
+
+exports.addDepartmentPost = async function (req, res) {
+    var { name, info } = req.body
+
+    let department = await DepartmentModel.create({
+        name,
+        info
+    })
+
+    res.json({
+        status: 'success',
+        msg: 'Successfully created Department',
+        data: department
+    });
+}
+
+exports.editDepartmentListGet = async function (req, res) {
+    console.log('editDepartmentListGet: ');
+    let departments = await DepartmentModel.find({})
+    res.render('editDepartmentList', { docs: departments });
+}
+
+exports.editDepartmentGet = async function (req, res) {
+    let departmentID = req.params.departmentID
+
+    let department = await DepartmentModel.findOne({ _id: departmentID })
+
+    res.render('editDepartment', { doc: department });
+}
+
+
+exports.editDepartmentPost = async function (req, res) {
+    var { name, info,departementID } = req.body
+
+    let department = await DepartmentModel.findById(departementID)
+    if(department){
+        department.name = name
+        department.info = info
+        department.save()
+    }else{
+        res.json({
+            status: 'failed',
+            msg: 'Department does not exist',
+        });
+    }
+
+    res.json({
+        status: 'success',
+        msg: 'Successfully created Department',
+        data: department
+    });
 }

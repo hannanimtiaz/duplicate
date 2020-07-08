@@ -81,5 +81,28 @@ router.post('/removeBooks', auth.isAdmin, admin.removeBookPost)
 
 /*=====  End of REMOVE BOOKS ROUTES  ======*/
 
+/*=============================================
+=            DEPARTMENT ROUTES            =
+=============================================*/
+
+router.get('/addDepartment', auth.isAdmin, admin.addDepartmentGet)
+router.post('/addDepartment', auth.isAdmin, admin.addDepartmentPost)
+
+
+/*=====  End of REMOVE BOOKS ROUTES  ======*/
+
+
+/*=============================================
+=            EDIT DEPARTMENT ROUTES            =
+=============================================*/
+
+router.get('/editDepartmentList', auth.isAdmin, admin.editDepartmentListGet)
+
+router.get('/editDepartment/:departmentID', auth.isAdmin, admin.editDepartmentGet)
+router.post('/editDepartment', auth.isAdmin, admin.editDepartmentPost)
+
+
+/*=====  End of REMOVE BOOKS ROUTES  ======*/
+
 
 module.exports = router;

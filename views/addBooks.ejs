@@ -29,8 +29,9 @@
                                 <label>Deaprtment</label>
                                 <select id="department" name="department" class="form-control selectric">
                                     <option value="">Please select a department</option>
-                                    <option value="a">a</option>
-                                    <option value="b">b</option>
+                                    <% departments.forEach(department => { %>
+                                        <option value=<%=department._id%>><%= department.name %> </option>
+                                    <% }) %>
                                 </select>
                             </div>
                             <div class="form-group">

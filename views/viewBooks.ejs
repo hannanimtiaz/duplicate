@@ -64,7 +64,7 @@
                                                 </div>
                                                 <%})%>
                                             </td>
-                                            <td><%= doc.department %></td>
+                                            <td><%= doc.department.name %></td>
                                             <td>
                                                 <%= doc.quantity %>
                                             </td>
@@ -101,7 +101,7 @@
            body: '<form class="needs-validation" novalidate=""><div class="form-group"><label>Name</label><input type="string" name="name" class="form-control name" required=""> <div class="invalid-feedback"> Name is required</div></div><div class="form-group"><label>Roll No.</label><input type="string" name="roll_no" onkeypress="return isNumberKey(event)" class="form-control roll_no" required=""> <div class="invalid-feedback"> Roll Number is required</div></div><div class="form-group"><label>Phone Number</label><input type="string" name="phone_no" onkeypress="return isNumberKey(event)" class="form-control phone_no" required=""> <div class="invalid-feedback"> Phone No. is required</div></div></form>',
            buttons: [
            {
-               text: 'Issuee',
+               text: 'Issue',
                class: 'btn btn-primary issue',
                handler: function(current_modal){
                    let name = $(current_modal).find(".name").val()       

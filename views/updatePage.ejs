@@ -14,9 +14,9 @@
             <div class="col-12 col-md-12 col-lg-8">
                 <div class="card">
                     <div class="card-header">
-                        <h4>Enter a Book</h4>
+                        <h4>Update Book Details</h4>
                     </div>
-                    <form id="enterBook" bookID="<%= book._id %>"  method="POST" class="needs-validation" novalidate="">
+                    <form id="enterBook" bookID="<%= book._id %>" method="POST" class="needs-validation" novalidate="">
                         <div class="card-body">
                             <div class="form-group">
                                 <label>Title</label>
@@ -30,8 +30,10 @@
                                 <label>Deaprtment</label>
                                 <select id="department" name="department" class="form-control selectric">
                                     <option value="">Please select a department</option>
-                                    <option value="a">a</option>
-                                    <option value="b">b</option>
+                                    <% departments.forEach((department, i) => { %>
+                                    <option index="<%= i + 1 %>" check="<%= book.department._id %> "
+                                        value=<%=department._id%>><%= department.name %> </option>
+                                    <% }) %>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -44,8 +46,7 @@
                             </div>
                             <div class="form-group clone d-none">
                                 <label>Author</label>
-                                <input  type="text" name="author"
-                                    class="form-control author" required="">
+                                <input type="text" name="author" class="form-control author" required="">
                                 <div class="invalid-feedback">
                                     Author is required
                                 </div>
@@ -78,22 +79,22 @@
 
 <script>
 
-    <% book.author.forEach(function(author){%>
+    <% book.author.forEach(function (author) {%>
         authorClone = $('.clone').clone()
         authorClone.removeClass('clone d-none');
         $('#appendHere').append(authorClone)
         $(authorClone).find('input').val('<%=author%>')
-    <%})%>
-    
-    $('#addAuthor').click(function (e) {
-        e.preventDefault();
-        authorClone = $('.clone').clone()
-        authorClone.removeClass('clone d-none');
-        $('#appendHere').append(authorClone)
-    })
+            <%}) %>
+
+        $('#addAuthor').click(function (e) {
+            e.preventDefault();
+            authorClone = $('.clone').clone()
+            authorClone.removeClass('clone d-none');
+            $('#appendHere').append(authorClone)
+        })
     $('#removeAuthor').click(function (e) {
         e.preventDefault();
-        if($('#appendHere .form-group').length > 1)
+        if ($('#appendHere .form-group').length > 1)
             $('#appendHere .form-group').last().remove()
         console.log('appendHere ', $('#appendHere .form-group').length);
     })
@@ -125,7 +126,7 @@
                 url: "/updateBook",
                 type: "POST",
                 data: {
-                    bookID:bookID,
+                    bookID: bookID,
                     quantity: quantity,
                     title: title,
                     author: author,
@@ -138,7 +139,7 @@
                         message: data.msg,
                         position: 'topCenter'
                     });
-                    setTimeout(()=>{
+                    setTimeout(() => {
                         location.reload()
                     }, 5000)
 
@@ -154,7 +155,25 @@
         }
     })
 
-
+    $(window).bind("load", function () {
+        console.log('is this running?');
+        $('option').each(function () {
+            var select = $(this).closest('select')
+            var index = $(this).attr('index')
+            var check = ''
+            if (typeof $(this).attr('check') != 'undefined') {
+                check = $(this).attr('check')
+            }
+            var val = $(this).val().toString()
+            console.log('check: ', check);
+            console.log('val: ', val);
+            console.log('index: ', index);
+            if (check == val) {
+                $(select).prop('selectedIndex', index).selectric('refresh');
+                console.log('same ');
+            }
+        })
+    });
 </script>
 
 <%- include('./layouts/html_end.ejs') %>
