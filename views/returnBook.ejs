@@ -49,6 +49,8 @@
                                             <th>Title</th>
                                             <th>Author</th>
                                             <th>Department</th>
+                                            <th>Issue Date</th>
+                                            <th>Return Date</th>
                                             <th>Name</th>
                                             <th>Roll. No</th>
                                             <th>Phone No</th>
@@ -67,8 +69,15 @@
                                             </td>
                                             <td><%= doc.book_id.department.name %></td>
                                             <td>
+                                                <%= doc.issueDate %> 
+                                            </td>
+                                            <td>
+                                                <%= doc.returnDate %> 
+                                            </td>
+                                            <td>
                                                 <%= doc.name %>
                                             </td>
+                                            
                                             <td>
                                                 <%= doc.roll_no %>
                                             </td>
