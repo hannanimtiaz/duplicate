@@ -1,23 +1,28 @@
 const { body, validationResult, oneOf, check } = require('express-validator');
-
 const { ifErrors } = require('./helper');
+const AdminModel = require('../models/admin')
 
-exports.userSignup = [
-    body('noid').exists().custom(async value => {
-        let userDoc = await Helper.checkIfNoIdAlreadyExistsAsync(value);
-        if (userDoc)
-            return Promise.reject('Noid already exists. User cannot be created');
-    }),
-    body('email').isEmail().custom(async value => {
-        let userDoc = await Helper.emailAlreadyExistsAsync(value)
-        if (userDoc)
-            return Promise.reject('Email already exists. Please use different email');
-    }),
-    body('phone').exists().custom(async value => {
-        let userDoc = await Helper.phoneAlreadyExistsAsync(value)
-        if (userDoc)
-            return Promise.reject('Phone already exists. Please use different phone');
-    }),
 
+exports.adminUpdate = [
+    check('password').exists().withMessage('Details must be entered'),
+    check('email').exists().customSanitizer(val => val.toLowerCase()).custom(async (val, { req }) => {
+        if (await emailExists(val, req.session._id)) {
+            return Promise.reject('Email already exists');
+        }
+    }),
     ifErrors
 ]
+async function emailExists(value, id) {
+    let admin = await AdminModel.findOne({ email: value.toLowerCase()})
+    console.log('admin: ', admin);
+    if (admin) {
+        console.log('admin._id: ', admin._id);
+        console.log('id: ', id);
+        if (admin._id == id)
+            return false
+        else
+            return true
+    }
+    else
+        return false
+}

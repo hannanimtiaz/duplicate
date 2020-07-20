@@ -1,6 +1,7 @@
 var BookModel = require('../models/book')
 var IssueModel = require('../models/issue')
 var DepartmentModel = require('../models/depertment')
+var AdminModel =  require('../models/admin')
 const moment = require('moment-timezone');
 
 exports.index = function (req, res, next) {
@@ -8,6 +9,31 @@ exports.index = function (req, res, next) {
     res.render('home');
 }
 
+exports.profileGet = async function(req, res, next) {
+    let admin = await AdminModel.findById(req.session._id);
+
+    console.log('admin: ', admin);
+    res.render('profile', { admin });
+}
+
+exports.profilePost = async function(req, res, next) {
+    const { email, password } = req.body;
+
+    let admin = await AdminModel.findById(req.session._id);
+    console.log('admin: ', admin);
+
+    admin.email = email.toLowerCase()
+    admin.password = password
+    
+
+    admin.save()
+
+    res.json({
+        status: 'success',
+        msg: 'Admin updated',
+        data: null
+    });
+}
 
 exports.getAddBooks = async function (req, res) {
     var departments = await DepartmentModel.find({})
