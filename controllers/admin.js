@@ -3,7 +3,7 @@ var IssueModel = require('../models/issue')
 var DepartmentModel = require('../models/depertment')
 var AdminModel =  require('../models/admin')
 const moment = require('moment-timezone');
-
+//test
 exports.index = function (req, res, next) {
     console.log("rendering index");
     res.render('home');
